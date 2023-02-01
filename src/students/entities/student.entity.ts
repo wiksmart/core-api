@@ -1,25 +1,22 @@
-import { Class } from 'src/classes/entities/class.entity'
-import { Region } from 'src/regions/entities/region.entity'
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Student {
     @PrimaryGeneratedColumn('uuid')
-    id: string
+    id: string;
 
     @Column()
-    rfid: string
+    rfid: string;
 
     @Column()
-    nis: string
+    nis: string;
 
     @Column()
-    name: string
+    name: string;
 
-    @OneToOne(() => Class)
-    class: Class
+    @Column()
+    class: string;
 
-    @OneToOne(() => Region)
-    region: Region
+    @Column()
+    region: string;
 }
-
