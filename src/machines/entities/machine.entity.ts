@@ -6,13 +6,13 @@ export class Machine {
     id: string;
 
     @Column()
-    alamat_mesin: string;
+    address: string;
 
     @Column()
-    ruangan: string;
+    room: string;
 
     @Column()
-    deskripsi_mesin: string;
+    description: string;
 
     // @Column({ default: true })
     // isActive: boolean;

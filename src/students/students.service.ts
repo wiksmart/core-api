@@ -7,7 +7,6 @@ import { Student } from './entities/student.entity';
 
 @Injectable()
 export class StudentsService {
-    machinesRepository: any;
     constructor(
         @InjectRepository(Student)
         private studentsRepository: Repository<Student>,
@@ -32,4 +31,3 @@ export class StudentsService {
         return await this.studentsRepository.delete({ id });
     }
 }
-

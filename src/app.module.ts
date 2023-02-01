@@ -8,6 +8,11 @@ import { Machine } from './machines/entities/machine.entity';
 import { Student } from './students/entities/student.entity';
 import { StudentsModule } from './students/students.module';
 
+import { TeachersModule } from './teachers/teachers.module';
+import { StaffsModule } from './staffs/staffs.module';
+import { Teacher } from './teachers/entities/teacher.entity';
+import { Staff } from './staffs/entities/staff.entity';
+
 @Module({
     imports: [
         ConfigModule.forRoot({ isGlobal: true }),
@@ -18,11 +23,13 @@ import { StudentsModule } from './students/students.module';
             username: process.env.DB_USER,
             password: process.env.DB_PASS,
             database: process.env.DB_NAME,
-            entities: [Machine, Student],
+            entities: [Machine, Student, Teacher, Staff],
             synchronize: true,
         }),
         MachinesModule,
         StudentsModule,
+        TeachersModule,
+        StaffsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
