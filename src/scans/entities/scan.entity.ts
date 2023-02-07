@@ -30,6 +30,9 @@ export class Scan {
     @ManyToOne(() => Machine, (machine) => machine.scans, { nullable: true })
     machine: Machine
 
+    @Column({ type: 'enum', enum: ['IN', 'OUT', 'ROOM'] })
+    status: string
+
     @CreateDateColumn()
     created_at: Date
 

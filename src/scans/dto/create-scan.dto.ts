@@ -17,4 +17,7 @@ export class CreateScanDto {
 
     @IsOptional()
     user?: User
+
+    @IsNotEmpty()
+    status: string
 }
