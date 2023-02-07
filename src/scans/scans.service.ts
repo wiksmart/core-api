@@ -26,25 +26,51 @@ export class ScansService {
     }
 
     async scan(machine: string, rfid: string) {
-        const checkMac = await this.machinesService.findByAdress(machine)
-        const checkUser = await this.usersService.findByRfid(rfid)
-
-        if (!checkMac) Logger.warn(`Mesin ${machine} tidak terdaftar!`)
-        if (!checkUser) Logger.warn(`RFID ${rfid} tidak terdaftar!`)
-
         const date = this.currentDate()
 
-        await this.scansRepository.save({
+        const checkMac = await this.machinesService.findByAdress(machine)
+        const checkUser = await this.usersService.findByRfid(rfid)
+        const checkScanIn = await this.scansRepository.findOneBy({
+            rfid,
+            status: 'IN',
+            date,
+        })
+        const checkScanOut = await this.scansRepository.findOneBy({
+            rfid,
+            status: 'OUT',
+            date,
+        })
+
+        if (!checkMac)
+            Logger.error(
+                `Machine ${machine} not registered!`,
+                'GakKedaftarBang',
+            )
+
+        if (!checkUser)
+            Logger.error(`RFID ${rfid} not registered!`, 'GakKedaftarBang')
+
+        const payload: CreateScanDto = {
             address: machine,
             machine: checkMac,
             rfid,
             user: checkUser,
             date,
-        })
+            status: 'ROOM',
+        }
 
-        Logger.log(`Berhasil scan ${machine} ${rfid}`)
+        if (checkMac && checkMac.is_attendance) {
+            if (!checkScanIn) payload.status = 'IN'
+            if (checkScanIn && !checkScanOut) payload.status = 'OUT'
 
-        return 'This action adds a new scan'
+            if (!checkScanIn || !checkScanOut) {
+                await this.scansRepository.save(payload)
+                Logger.error('Berhasil absen masuk', 'ApaIyaBangMessi')
+            }
+        } else if (checkScanIn && !checkScanOut) {
+            await this.scansRepository.save(payload)
+            Logger.error('Berhasil absen ruangan', 'ApaIyaBangMessi')
+        }
     }
 
     async findAll() {
