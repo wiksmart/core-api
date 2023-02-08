@@ -1,20 +1,37 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    Query,
+    UseGuards,
+} from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 import { ClassesService } from './classes.service'
 import { CreateClassDto } from './dto/create-class.dto'
 import { UpdateClassDto } from './dto/update-class.dto'
 
-@Controller('classes')
+@ApiTags('classes')
+@Controller('classes/:schoolYearId')
 export class ClassesController {
-    constructor(private readonly classesService: ClassesService) { }
+    constructor(private readonly classesService: ClassesService) {}
 
     @Post()
-    async create(@Body() createClassDto: CreateClassDto) {
-        return await this.classesService.create(createClassDto)
+    async create(
+        @Body() createClassDto: CreateClassDto,
+        @Param('schoolYearId') schoolYearId: string,
+    ) {
+        return await this.classesService.create(createClassDto, schoolYearId)
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
-    async findAll() {
-        return await this.classesService.findAll()
+    async findAll(@Param('schoolYearId') schoolYearId: string) {
+        return await this.classesService.findAll(schoolYearId)
     }
 
     @Get(':id')
@@ -23,7 +40,10 @@ export class ClassesController {
     }
 
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
+    async update(
+        @Param('id') id: string,
+        @Body() updateClassDto: UpdateClassDto,
+    ) {
         return await this.classesService.update(id, updateClassDto)
     }
 

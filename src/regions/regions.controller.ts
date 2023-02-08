@@ -1,20 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseGuards,
+} from '@nestjs/common'
 import { RegionsService } from './regions.service'
 import { CreateRegionDto } from './dto/create-region.dto'
 import { UpdateRegionDto } from './dto/update-region.dto'
+import { ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 
-@Controller('regions')
+@ApiTags('regions')
+@Controller('regions/:schoolYearId')
 export class RegionsController {
-    constructor(private readonly regionsService: RegionsService) { }
+    constructor(private readonly regionsService: RegionsService) {}
 
     @Post()
-    create(@Body() createRegionDto: CreateRegionDto) {
-        return this.regionsService.create(createRegionDto)
+    create(
+        @Body() createRegionDto: CreateRegionDto,
+        @Param('schoolYearId') schoolYearId: string,
+    ) {
+        return this.regionsService.create(createRegionDto, schoolYearId)
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
-    findAll() {
-        return this.regionsService.findAll()
+    findAll(@Param('schoolYearId') schoolYearId: string) {
+        return this.regionsService.findAll(schoolYearId)
     }
 
     @Get(':id')

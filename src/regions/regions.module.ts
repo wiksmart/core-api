@@ -3,10 +3,11 @@ import { RegionsService } from './regions.service'
 import { RegionsController } from './regions.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Region } from './entities/region.entity'
+import { SchoolYearsModule } from 'src/school-years/school-years.module'
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Region])],
+    imports: [TypeOrmModule.forFeature([Region]), SchoolYearsModule],
     controllers: [RegionsController],
-    providers: [RegionsService]
+    providers: [RegionsService],
 })
-export class RegionsModule { }
+export class RegionsModule {}

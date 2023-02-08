@@ -10,6 +10,8 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
+import { Major } from 'src/majors/entities/major.entity'
+import { SchoolYear } from 'src/school-years/entities/school-year.entity'
 
 @Entity()
 export class User {
@@ -22,8 +24,11 @@ export class User {
     @Column({ unique: true })
     email: string
 
-    @Column({ unique: true })
+    @Column({ unique: true, nullable: true })
     nis: string
+
+    @Column({ unique: true, nullable: true })
+    nip: string
 
     @Column()
     name: string
@@ -31,11 +36,17 @@ export class User {
     @Column()
     password: string
 
+    @Column({ nullable: true })
+    division: string
+
     @Column({ type: 'enum', enum: ['TEACHER', 'STUDENT', 'STAFF', 'ADMIN'] })
     type: string
 
-    @ManyToOne(() => Class, (Class) => Class.students, { nullable: true })
-    class: Class
+    @ManyToOne(() => Major, (Major) => Major.students, { nullable: true })
+    major: Major
+
+    // @ManyToOne(() => Class, (Class) => Class.students, { nullable: true })
+    // class: Class
 
     @ManyToOne(() => Region, (region) => region.students, { nullable: true })
     region: Region
@@ -48,4 +59,7 @@ export class User {
 
     @OneToMany(() => Scan, (scan) => scan.user)
     scans: Scan[]
+
+    @ManyToOne(() => SchoolYear, (school_year) => school_year.users)
+    school_year: SchoolYear
 }

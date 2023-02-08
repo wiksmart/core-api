@@ -15,4 +15,8 @@ export class UsersService {
     async findByRfid(rfid: string) {
         return await this.usersRepository.findOneBy({ rfid })
     }
+
+    async findByEmail(email: string) {
+        return await this.usersRepository.findOneBy({ email })
+    }
 }
