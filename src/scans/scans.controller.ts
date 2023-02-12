@@ -1,20 +1,14 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-} from '@nestjs/common'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 import { ScansService } from './scans.service'
-import { CreateScanDto } from './dto/create-scan.dto'
-import { UpdateScanDto } from './dto/update-scan.dto'
+import { ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard'
 
+@ApiTags('scans')
 @Controller('scans')
 export class ScansController {
     constructor(private readonly scansService: ScansService) {}
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     findAll() {
         return this.scansService.findAll()

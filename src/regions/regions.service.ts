@@ -4,20 +4,40 @@ import { UpdateRegionDto } from './dto/update-region.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Region } from './entities/region.entity'
+import { SchoolYearsService } from 'src/school-years/school-years.service'
 
 @Injectable()
 export class RegionsService {
     constructor(
         @InjectRepository(Region)
         private regionsRepository: Repository<Region>,
-    ) { }
+        private readonly schoolYearsService: SchoolYearsService,
+    ) {}
 
-    async create(createRegionDto: CreateRegionDto) {
-        return await this.regionsRepository.save(createRegionDto)
+    async create(createRegionDto: CreateRegionDto, schoolYearId: string) {
+        // return await this.regionsRepository.save(createRegionDto)
+        const schoolYear = await this.schoolYearsService.findOne(schoolYearId)
+        return await this.regionsRepository.save({
+            ...createRegionDto,
+            school_year: schoolYear,
+        })
     }
 
-    async findAll() {
-        return await this.regionsRepository.find()
+    async findAll(schoolYearId: string) {
+        // return await this.regionsRepository.find()
+        const regions = await this.regionsRepository
+            .createQueryBuilder('regions')
+            .innerJoinAndSelect(
+                'regions.school_year',
+                'school_years',
+                'school_years.id = :schoolYearId',
+                {
+                    schoolYearId,
+                },
+            )
+            .getMany()
+
+        return regions
     }
 
     async findOne(id: string) {

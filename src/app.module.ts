@@ -16,6 +16,11 @@ import { Region } from './regions/entities/region.entity'
 import { Class } from './classes/entities/class.entity'
 import { Scan } from 'src/scans/entities/scan.entity'
 import { Machine } from './machines/entities/machine.entity'
+import { MajorsModule } from './majors/majors.module'
+import { Major } from './majors/entities/major.entity'
+import { SchoolYearsModule } from './school-years/school-years.module'
+import { SchoolYear } from './school-years/entities/school-year.entity'
+import { AuthModule } from './auth/auth.module'
 
 @Module({
     imports: [
@@ -27,7 +32,7 @@ import { Machine } from './machines/entities/machine.entity'
             username: process.env.DB_USER,
             password: process.env.DB_PASS,
             database: process.env.DB_NAME,
-            entities: [User, Region, Class, Scan, Machine],
+            entities: [User, Region, Class, Scan, Machine, Major, SchoolYear],
             synchronize: true,
         }),
         MachinesModule,
@@ -38,6 +43,9 @@ import { Machine } from './machines/entities/machine.entity'
         StudentsModule,
         TeachersModule,
         ScansModule,
+        MajorsModule,
+        SchoolYearsModule,
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],
